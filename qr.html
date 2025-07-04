@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>QR Code Generator with Download</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+      #qr-code {
+        margin: 20px 0;
+      }
+      #download-btn {
+        padding: 8px 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="text" id="qr-input" placeholder="Enter text or URL" />
+    <button id="generate-btn">Generate QR Code</button>
+    <div id="qr-code"></div>
+    <a id="download-btn" style="display: none" download="qr-code.png"
+      >Download QR Code</a
+    >
+
+    <script>
+      var qrContainer = document.getElementById("qr-code");
+      var downloadBtn = document.getElementById("download-btn");
+
+      document
+        .getElementById("generate-btn")
+        .addEventListener("click", function () {
+          var input = document.getElementById("qr-input").value.trim();
+          qrContainer.innerHTML = "";
+          downloadBtn.style.display = "none";
+          if (input !== "") {
+            new QRCode(qrContainer, {
+              text: input,
+              width: 180,
+              height: 180,
+              colorDark: "#000000",
+              colorLight: "#ffffff",
+              correctLevel: QRCode.CorrectLevel.H,
+            });
+
+            // Wait for QR code to render, then set download link
+            setTimeout(function () {
+              var img = qrContainer.querySelector("img");
+              var canvas = qrContainer.querySelector("canvas");
+              if (img && img.src) {
+                downloadBtn.href = img.src;
+                downloadBtn.style.display = "inline-block";
+              } else if (canvas) {
+                downloadBtn.href = canvas.toDataURL();
+                downloadBtn.style.display = "inline-block";
+              }
+            }, 300); // Wait for QR code to be generated
+          }
+        });
+    </script>
+  </body>
+</html>
